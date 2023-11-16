@@ -184,10 +184,14 @@ class PICa_OKVQA:
         for ii in val_idx:
             self.valkey2idx[val_idx[ii]] = int(ii)
         if self.args.similarity_metric == 'question':
-            self.train_feature = np.load('%s/coco_clip_vitb16_train2014_okvqa_question.npy' % self.args.similarity_path)
-            self.val_feature = np.load('%s/coco_clip_vitb16_val2014_okvqa_question.npy' % self.args.similarity_path)
-            self.train_idx = json.load(
-                open('%s/okvqa_qa_line2sample_idx_train2014.json' % self.args.similarity_path, 'r'))
+            # self.train_feature = np.load('%s/coco_clip_vitb16_train2014_okvqa_question.npy' % self.args.similarity_path)
+            # self.val_feature = np.load('%s/coco_clip_vitb16_val2014_okvqa_question.npy' % self.args.similarity_path)
+            # self.train_idx = json.load(
+            #     open('%s/okvqa_qa_line2sample_idx_train2014.json' % self.args.similarity_path, 'r'))
+
+            self.train_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_train_questions_feats.npy')
+            self.val_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_test_questions_feats.npy')
+            self.train_idx = json.load(open(f'data/datasets/${args.ds_name}/${args.ds_name}_train_idx.json', 'r'))
 
         elif self.args.similarity_metric == 'imagequestion':
             # self.train_feature = np.load('%s/coco_clip_vitb16_train2014_okvqa_question.npy' % self.args.similarity_path)
@@ -201,8 +205,7 @@ class PICa_OKVQA:
 
             self.train_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_train_questions_feats.npy')
             self.val_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_test_questions_feats.npy')
-            self.train_idx = json.load(
-                open('%s/okvqa_qa_line2sample_idx_train2014.json' % self.args.similarity_path, 'r'))
+            self.train_idx = json.load(open(f'data/datasets/${args.ds_name}/${args.ds_name}_train_idx.json', 'r'))
             self.image_train_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_train_feats.npy')
             self.image_val_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_test_feats.npy')
 
