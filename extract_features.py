@@ -33,7 +33,7 @@ def extract_img_feat(ds_root_dir, ds_name, split='train'):
         image = preprocess(Image.open(f'{ds_root_dir}/{ds_name}/{split}/{img.name}')).unsqueeze(0).to(device)
         with torch.no_grad():
             im_feat = model.encode_image(image)
-            features_list.append(im_feat)
+            features_list.append(im_feat.cpu())
         count += 1
         if count % 100 == 0:
             print(f'[{count}] {img.name}')
@@ -51,11 +51,15 @@ def extract_question_feat(ds_root_dir, ds_name, split='train'):
         txt = clip.tokenize(d['question']).to(device)
         with torch.no_grad():
             txt_feat = model.encode_text(txt)
-            features_list.append(txt_feat)
+            features_list.append(txt_feat.cpu())
         count += 1
         if count % 100 == 0:
             print(f'[{count}]')
     np.save(f'{ds_root_dir}/{ds_name}/{ds_name}_{split}_questions_feats.npy', features_list)
+
+
+# def extract_image_question_idx(ds_root_dir, ds_name, split='train'):
+
 
 
 if __name__ == '__main__':
