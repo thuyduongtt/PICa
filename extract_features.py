@@ -26,7 +26,7 @@ def stream_data(path_to_json_file, limit=0, start_at=0):
 def extract_img_feat(ds_root_dir, ds_name, split='train'):
     features_list = []
     count = 0
-    for img in Path(split).iterdir():
+    for img in Path(f'{ds_root_dir}/{ds_name}/{split}').iterdir():
         if img.name.startswith('.'):
             continue
         image = preprocess(Image.open(f'{ds_root_dir}/{ds_name}/{split}/{img.name}')).unsqueeze(0).to(device)
