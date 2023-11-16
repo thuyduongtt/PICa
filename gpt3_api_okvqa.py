@@ -21,19 +21,21 @@ def process_answer(answer):
 
 
 def load_anno(coco_caption_file, answer_anno_file, question_anno_file):
-    if coco_caption_file is not None:
-        coco_caption = json.load(open(coco_caption_file, 'r'))
-        if type(coco_caption) == type({}): coco_caption = coco_caption['annotations']
+    # if coco_caption_file is not None:
+    #     coco_caption = json.load(open(coco_caption_file, 'r'))
+    #     if type(coco_caption) == type({}): coco_caption = coco_caption['annotations']
     answer_anno = json.load(open(answer_anno_file, 'r'))
     question_anno = json.load(open(question_anno_file, 'r'))
 
     caption_dict = {}
     if coco_caption_file is not None:
-        for sample in coco_caption:
-            if sample['image_id'] not in caption_dict:
-                caption_dict[sample['image_id']] = [sample['caption']]
-            else:
-                caption_dict[sample['image_id']].append(sample['caption'])
+        # for sample in coco_caption:
+        #     if sample['image_id'] not in caption_dict:
+        #         caption_dict[sample['image_id']] = [sample['caption']]
+        #     else:
+        #         caption_dict[sample['image_id']].append(sample['caption'])
+        caption_dict = load_captions(coco_caption_file)
+
     answer_dict = {}
     for sample in answer_anno['annotations']:
         k = str(sample['image_id']) + '<->' + str(sample['question_id'])
@@ -232,13 +234,7 @@ class PICa_OKVQA:
         return tags_dict
 
     def load_cachetext(self):
-        caption_dict = {}
-        with open(self.args.valcaption_file) as f:
-            captions = json.load(f)
-            for key in captions:
-                caption_dict[key] = [captions[key]]
-
-        return caption_dict
+        return load_captions(self.args.valcaption_file)
 
         # read_tsv = csv.reader(open(self.args.valcaption_file, 'r'), delimiter="\t")
         # caption_dict = {}
@@ -259,6 +255,16 @@ class PICa_OKVQA:
         #         else:
         #             caption_dict[int(row[0])].append(row[1].split('caption": "')[1].split('", "conf"')[0])
         # return caption_dict
+
+
+def load_captions(captions_file):
+    caption_dict = {}
+    with open(captions_file) as f:
+        captions = json.load(f)
+        for key in captions:
+            caption_dict[key] = [captions[key]]
+
+    return caption_dict
 
 
 def main():
@@ -315,4 +321,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
