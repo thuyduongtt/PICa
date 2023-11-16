@@ -142,7 +142,7 @@ class PICa_OKVQA:
 
             except Exception as e:
                 print(e)
-                exit(0)
+                # exit(0)
 
             pred_answer_list.append(process_answer(response['choices'][0]["text"].strip()))
 
