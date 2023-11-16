@@ -189,7 +189,7 @@ class PICa_OKVQA:
 
         self.valkey2idx = {}
         for ii in val_idx:
-            self.valkey2idx[val_idx[ii]] = ii
+            self.valkey2idx[val_idx[ii]] = int(ii)
         if self.args.similarity_metric == 'question':
             # self.train_feature = np.load('%s/coco_clip_vitb16_train2014_okvqa_question.npy' % self.args.similarity_path)
             # self.val_feature = np.load('%s/coco_clip_vitb16_val2014_okvqa_question.npy' % self.args.similarity_path)
