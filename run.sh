@@ -19,8 +19,16 @@ case $1 in
     TASK='image'
     DS_NAME="balanced_10"
     ;;
+  3)
+    TASK='idx'
+    DS_NAME="unbalanced"
+    ;;
+  4)
+    TASK='idx'
+    DS_NAME="balanced_10"
+    ;;
 esac
 
 python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split train
- python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split test
+python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split test
 
