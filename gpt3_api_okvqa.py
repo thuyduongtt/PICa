@@ -259,7 +259,7 @@ def main():
     # parser.add_argument('--apikey', type=str, required=True, help='api key; https://openai.com/api/')
     # parser.add_argument('--engine', type=str, default='davinci', help='api engine; https://openai.com/api/')
     parser.add_argument('--ds_name', type=str, require=True)
-    parser.add_argument('--caption_type', type=str, default='vinvl_tag', help='vinvl_tag, vinvl')
+    parser.add_argument('--caption_type', type=str, default='vinvl', help='vinvl_tag, vinvl')
     parser.add_argument('--n_shot', type=int, default=16, help="number of shots")
     parser.add_argument('--n_ensemble', type=int, default=1, help="number of ensemble")
     parser.add_argument('--similarity_metric', type=str, default='imagequestion', help="random/question/imagequestion")

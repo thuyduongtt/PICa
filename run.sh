@@ -27,8 +27,22 @@ case $1 in
     TASK='idx'
     DS_NAME="balanced_10"
     ;;
+  7)
+    N_ENSEMBLE=1
+    DS_NAME="unbalanced"
+    ;;
+  8)
+    N_ENSEMBLE=1
+    DS_NAME="balanced_10"
+    ;;
 esac
 
-python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split train
-python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split test
+#python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split train
+#python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split test
 
+python gpt3_api_okvqa.py \
+ --ds_name $DS_NAME \
+ --n_ensemble $N_ENSEMBLE \
+ --valcaption_file data/assets/captions_${DS_NAME}.json
+ --similarity_path data/datasets/${DS_NAME}
+ --output_path output_${DS_NAME}
