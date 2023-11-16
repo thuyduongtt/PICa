@@ -232,8 +232,11 @@ class PICa_OKVQA:
         return tags_dict
 
     def load_cachetext(self):
+        caption_dict = {}
         with open(self.args.valcaption_file) as f:
-            caption_dict = json.load(f)
+            captions = json.load(f)
+            for key in captions:
+                caption_dict[key] = [captions[key]]
 
         return caption_dict
 
