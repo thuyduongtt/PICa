@@ -19,11 +19,11 @@ case $1 in
     TASK='image'
     DS_NAME="balanced_10"
     ;;
-  3)
+  5)
     TASK='idx'
     DS_NAME="unbalanced"
     ;;
-  4)
+  6)
     TASK='idx'
     DS_NAME="balanced_10"
     ;;
