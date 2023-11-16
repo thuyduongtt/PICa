@@ -88,7 +88,7 @@ class PICa_OKVQA:
         return answers
 
     def sample_inference(self, key):
-        img_key = int(key.split('<->')[0])
+        img_key = key.split('<->')[0]
         question, answer, caption = self.question_dict[key], self.answer_dict[key], self.inputtext_dict[img_key]
         caption_i = caption[
             random.randint(0, len(caption) - 1)]  ## select one caption if exists multiple, not true except COCO GT (5)
