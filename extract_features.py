@@ -43,12 +43,16 @@ def extract_question_feat(ds_root_dir, ds_name, split='train'):
     json_data = stream_data(f'{ds_root_dir}/{ds_name}/{split}.json')
 
     features_list = []
+    count = 0
     for d in json_data:
         if len(d['answers']) == 0:
             continue
         with torch.no_grad():
             txt_feat = model.encode_image(d['question'])
             features_list.append(txt_feat)
+        count += 1
+        if count % 100 == 0:
+            print(f'[{count}]')
     np.save(f'{ds_root_dir}/{ds_name}/{ds_name}_{split}_questions_feats.npy', features_list)
 
 
