@@ -34,7 +34,7 @@ def extract_img_feat(ds_root_dir, ds_name, split='train', limit=0):
         with torch.no_grad():
             im_feat = model.encode_image(image)
             print(im_feat.shape)
-            features_list.append(im_feat.cpu())
+            features_list.append(im_feat.squeeze().cpu())
         count += 1
         if count % 100 == 0:
             print(f'[{count}] {img.name}')
@@ -58,7 +58,7 @@ def extract_question_feat(ds_root_dir, ds_name, split='train', limit=0):
         with torch.no_grad():
             txt_feat = model.encode_text(txt)
             print(txt_feat.shape)
-            features_list.append(txt_feat.cpu())
+            features_list.append(txt_feat.squeeze().cpu())
         count += 1
         if count % 100 == 0:
             print(f'[{count}]')
