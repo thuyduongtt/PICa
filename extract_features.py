@@ -25,6 +25,7 @@ def stream_data(path_to_json_file, limit=0, start_at=0):
 
 def extract_img_feat(ds_root_dir, ds_name, split='train'):
     features_list = []
+    count = 0
     for img in Path(split).iterdir():
         if img.name.startswith('.'):
             continue
@@ -32,6 +33,9 @@ def extract_img_feat(ds_root_dir, ds_name, split='train'):
         with torch.no_grad():
             im_feat = model.encode_image(image)
             features_list.append(im_feat)
+        count += 1
+        if count % 100 == 0:
+            print(f'[{count}] {img.name}')
     np.save(f'{ds_root_dir}/{ds_name}/{ds_name}_{split}_feats.npy', features_list)
 
 
@@ -50,5 +54,13 @@ def extract_question_feat(ds_root_dir, ds_name, split='train'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ds_root_dir', type=str, require=True)
-    parser.add_argument('--ds_name', type=str, require=True)
+    parser.add_argument('--task', type=str, required=True)  # in ['question', 'image']
+    parser.add_argument('--ds_root_dir', type=str, required=True)
+    parser.add_argument('--ds_name', type=str, required=True)
+    parser.add_argument('--split', type=str, required=True)
+    args = parser.parse_args()
+
+    if args.task == 'question':
+        extract_question_feat(args.ds_root_dir, args.ds_name, args.split)
+    else:
+        extract_img_feat(args.ds_root_dir, args.ds_name, args.split)
