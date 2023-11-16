@@ -232,7 +232,11 @@ class PICa_OKVQA:
         return tags_dict
 
     def load_cachetext(self):
-        return json.load(self.args.valcaption_file)
+        with open(self.args.valcaption_file) as f:
+            caption_dict = json.load(f)
+
+        return caption_dict
+
         # read_tsv = csv.reader(open(self.args.valcaption_file, 'r'), delimiter="\t")
         # caption_dict = {}
         # if 'tag' in self.args.caption_type:
@@ -309,15 +313,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-# --ds_name unbalanced
-# --caption_type vinvl
-# --valcaption_file data/assets/captions_unbalanced.json
-
-# --n_shot
-# --n_ensemble
-# --similarity_metric
-# --valcaption_file
-# --tag_path
-# --coco_path
-# --similarity_path
-# --output_path

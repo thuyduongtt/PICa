@@ -35,6 +35,14 @@ case $1 in
     N_ENSEMBLE=1
     DS_NAME="balanced_10"
     ;;
+  9)
+    N_ENSEMBLE=5
+    DS_NAME="unbalanced"
+    ;;
+  10)
+    N_ENSEMBLE=5
+    DS_NAME="balanced_10"
+    ;;
 esac
 
 #python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split train
