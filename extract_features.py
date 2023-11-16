@@ -47,8 +47,9 @@ def extract_question_feat(ds_root_dir, ds_name, split='train'):
     for d in json_data:
         if len(d['answers']) == 0:
             continue
+        txt = clip.tokenize(d['question']).to(device)
         with torch.no_grad():
-            txt_feat = model.encode_text(d['question'])
+            txt_feat = model.encode_text(txt)
             features_list.append(txt_feat)
         count += 1
         if count % 100 == 0:
