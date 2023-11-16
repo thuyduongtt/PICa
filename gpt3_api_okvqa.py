@@ -174,9 +174,6 @@ class PICa_OKVQA:
             lineid = self.valkey2idx[key]
             question_similarity = np.matmul(self.train_feature, self.val_feature[lineid, :])
             ## end of Q-similairty
-            print('-- question_similarity', question_similarity.shape)
-            print('-- self.image_train_feature', self.image_train_feature.shape)
-            print('-- self.image_val_feature', self.image_val_feature.shape, self.image_val_feature[lineid, :].shape)
             similarity = question_similarity + np.matmul(self.image_train_feature, self.image_val_feature[lineid, :])
             index = similarity.argsort()[-n:][::-1]
             return [self.train_idx[str(x)] for x in index]
@@ -215,8 +212,6 @@ class PICa_OKVQA:
             self.train_idx = json.load(open(f'data/datasets/{args.ds_name}/{args.ds_name}_train_idx.json', 'r'))
             self.image_train_feature = np.load(f'data/datasets/{args.ds_name}/{args.ds_name}_train_feats.npy')
             self.image_val_feature = np.load(f'data/datasets/{args.ds_name}/{args.ds_name}_test_feats.npy')
-            print('image_train_feature:', self.image_train_feature.shape)
-            print('image_val_feature:', self.image_val_feature.shape)
 
     def load_tags(self):
         tags_dict = {}
