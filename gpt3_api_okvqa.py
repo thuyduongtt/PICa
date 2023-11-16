@@ -282,7 +282,7 @@ def main():
     parser.add_argument('--caption_type', type=str, default='vinvl', help='vinvl_tag, vinvl')
     parser.add_argument('--n_shot', type=int, default=16, help="number of shots")
     parser.add_argument('--n_ensemble', type=int, default=1, help="number of ensemble")
-    parser.add_argument('--similarity_metric', type=str, default='imagequestion', help="random/question/imagequestion")
+    parser.add_argument('--similarity_metric', type=str, default='question', help="random/question/imagequestion")
     parser.add_argument('--valcaption_file', type=str, default='input_text/vinvl_caption/VinVL_base_val2014.tsv')
     parser.add_argument('--tag_path', type=str, default='input_text/coco_caption_pred_tags')
     # parser.add_argument('--coco_path', type=str, default='coco_annotations')
