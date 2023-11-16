@@ -105,7 +105,7 @@ class PICa_OKVQA:
                     context_key = self.train_keys[random.randint(0, len(self.train_keys) - 1)]
                 else:
                     context_key = context_key_list[ni + self.args.n_shot * repeat]
-                img_context_key = int(context_key.split('<->')[0])
+                img_context_key = context_key.split('<->')[0]
                 while True:  ## make sure get context with valid question and answer
                     if len(self.traincontext_question_dict[context_key]) != 0 and len(
                             self.traincontext_answer_dict[context_key][0]) != 0:
@@ -189,7 +189,7 @@ class PICa_OKVQA:
 
         self.valkey2idx = {}
         for ii in val_idx:
-            self.valkey2idx[val_idx[ii]] = int(ii)
+            self.valkey2idx[val_idx[ii]] = ii
         if self.args.similarity_metric == 'question':
             # self.train_feature = np.load('%s/coco_clip_vitb16_train2014_okvqa_question.npy' % self.args.similarity_path)
             # self.val_feature = np.load('%s/coco_clip_vitb16_val2014_okvqa_question.npy' % self.args.similarity_path)
@@ -223,19 +223,19 @@ class PICa_OKVQA:
         tagging_pred_file = '%s/test.score.json.tsv' % self.args.tag_path
         read_tsv = csv.reader(open(tagging_pred_file, 'r'), delimiter="\t")
         for row in read_tsv:
-            image_id, tags = int(row[0]), json.loads(row[1])
+            image_id, tags = row[0], json.loads(row[1])
             tag_str = ', '.join([x['class'] for x in tags])
             tags_dict[image_id] = tag_str
         tagging_pred_file = '%s/val.score.json.tsv' % self.args.tag_path
         read_tsv = csv.reader(open(tagging_pred_file, 'r'), delimiter="\t")
         for row in read_tsv:
-            image_id, tags = int(row[0]), json.loads(row[1])
+            image_id, tags = row[0], json.loads(row[1])
             tag_str = ', '.join([x['class'] for x in tags])
             tags_dict[image_id] = tag_str
         tagging_pred_file = '%s/train.score.json.tsv' % self.args.tag_path
         read_tsv = csv.reader(open(tagging_pred_file, 'r'), delimiter="\t")
         for row in read_tsv:
-            image_id, tags = int(row[0]), json.loads(row[1])
+            image_id, tags = row[0], json.loads(row[1])
             tag_str = ', '.join([x['class'] for x in tags])
             tags_dict[image_id] = tag_str
         return tags_dict
