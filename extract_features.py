@@ -32,7 +32,7 @@ def extract_img_feat(ds_root_dir, ds_name, split='train', limit=0):
             continue
         image = preprocess(Image.open(f'{ds_root_dir}/{ds_name}/{split}/{img.name}')).unsqueeze(0).to(device)
         with torch.no_grad():
-            im_feat = model.encode_image(image).numpy()
+            im_feat = model.encode_image(image).cpu().numpy()
             print(im_feat.shape)
             features_list.append(im_feat)
         count += 1
