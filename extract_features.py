@@ -48,7 +48,7 @@ def extract_question_feat(ds_root_dir, ds_name, split='train'):
         if len(d['answers']) == 0:
             continue
         with torch.no_grad():
-            txt_feat = model.encode_image(d['question'])
+            txt_feat = model.encode_text(d['question'])
             features_list.append(txt_feat)
         count += 1
         if count % 100 == 0:
