@@ -1,6 +1,7 @@
 import argparse
 import clip
 import ijson
+import json
 import numpy as np
 import torch
 from PIL import Image
