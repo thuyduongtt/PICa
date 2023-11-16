@@ -41,7 +41,7 @@ def extract_img_feat(ds_root_dir, ds_name, split='train', limit=0):
         if 0 < limit <= count:
             break
 
-    features_list = np(features_list)
+    features_list = np.array(features_list)
     print('feature_list:', features_list.shape)
     np.save(f'{ds_root_dir}/{ds_name}/{ds_name}_{split}_feats.npy', features_list)
 
@@ -63,7 +63,7 @@ def extract_question_feat(ds_root_dir, ds_name, split='train', limit=0):
         if count % 100 == 0:
             print(f'[{count}]')
 
-    features_list = np(features_list)
+    features_list = np.array(features_list)
     print('feature_list:', features_list.shape)
     np.save(f'{ds_root_dir}/{ds_name}/{ds_name}_{split}_questions_feats.npy', features_list)
 
