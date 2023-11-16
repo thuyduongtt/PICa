@@ -21,6 +21,6 @@ case $1 in
     ;;
 esac
 
-python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split train --limit 10
-# python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split test
+python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split train
+ python extract_features.py --task $TASK --ds_root_dir data/datasets --ds_name $DS_NAME --split test
 
