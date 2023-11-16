@@ -181,8 +181,9 @@ class PICa_OKVQA:
             return None
 
     def load_similarity(self):
-        val_idx = json.load(open('%s/okvqa_qa_line2sample_idx_val2014.json' % self.args.similarity_path, 'r'))
         args = self.args
+        val_idx = json.load(open(f'data/datasets/{args.ds_name}/{args.ds_name}_test_idx.json', 'r'))
+
         self.valkey2idx = {}
         for ii in val_idx:
             self.valkey2idx[val_idx[ii]] = int(ii)
