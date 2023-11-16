@@ -81,11 +81,12 @@ if __name__ == '__main__':
     parser.add_argument('--ds_root_dir', type=str, required=True)
     parser.add_argument('--ds_name', type=str, required=True)
     parser.add_argument('--split', type=str, required=True)
+    parser.add_argument('--limit', type=int, default=0)
     args = parser.parse_args()
 
     if args.task == 'question':
-        extract_question_feat(args.ds_root_dir, args.ds_name, args.split)
+        extract_question_feat(args.ds_root_dir, args.ds_name, args.split, limit=args.limit)
     elif args.task == 'image':
-        extract_img_feat(args.ds_root_dir, args.ds_name, args.split)
+        extract_img_feat(args.ds_root_dir, args.ds_name, args.split, limit=args.limit)
     else:
         extract_image_question_idx(args.ds_root_dir, args.ds_name, args.split)
