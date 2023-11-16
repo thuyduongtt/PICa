@@ -1,9 +1,10 @@
-import torch
-import clip
-from PIL import Image
 import argparse
-from pathlib import Path
+import clip
 import ijson
+import numpy as np
+import torch
+from PIL import Image
+from pathlib import Path
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load("ViT-B/16", device=device)
