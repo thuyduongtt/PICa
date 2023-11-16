@@ -174,6 +174,7 @@ class PICa_OKVQA:
             lineid = self.valkey2idx[key]
             question_similarity = np.matmul(self.train_feature, self.val_feature[lineid, :])
             ## end of Q-similairty
+            print('-- question_similarity', question_similarity.shape)
             print('-- self.image_train_feature', self.image_train_feature.shape)
             print('-- self.image_val_feature', self.image_val_feature.shape, self.image_val_feature[lineid, :].shape)
             similarity = question_similarity + np.matmul(self.image_train_feature, self.image_val_feature[lineid, :])
