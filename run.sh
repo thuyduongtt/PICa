@@ -51,6 +51,6 @@ esac
 python gpt3_api_okvqa.py \
  --ds_name $DS_NAME \
  --n_ensemble $N_ENSEMBLE \
- --valcaption_file data/assets/captions_${DS_NAME}.json
- --similarity_path data/datasets/${DS_NAME}
+ --valcaption_file data/assets/captions_${DS_NAME}.json \
+ --similarity_path data/datasets/${DS_NAME} \
  --output_path output_${N_ENSEMBLE}_${DS_NAME}
