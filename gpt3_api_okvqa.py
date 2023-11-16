@@ -140,19 +140,22 @@ class PICa_OKVQA:
                     stop=["\n", "<|endoftext|>"]
                 )
 
+                pred_answer_list.append(process_answer(response['choices'][0]["text"].strip()))
+
+                # plist = []
+                # for ii in range(len(response['choices'][0]['logprobs']['tokens'])):
+                #     if response['choices'][0]['logprobs']['tokens'][ii] == '\n':
+                #         break
+                #     plist.append(response['choices'][0]['logprobs']['token_logprobs'][ii])
+                # pred_prob_list.append(sum(plist))
+                pred_prob_list.append(1.0)
+
             except Exception as e:
                 print(e)
                 # exit(0)
+                pred_answer_list.append('No answer')
+                pred_prob_list.append(1.0)
 
-            pred_answer_list.append(process_answer(response['choices'][0]["text"].strip()))
-
-            # plist = []
-            # for ii in range(len(response['choices'][0]['logprobs']['tokens'])):
-            #     if response['choices'][0]['logprobs']['tokens'][ii] == '\n':
-            #         break
-            #     plist.append(response['choices'][0]['logprobs']['token_logprobs'][ii])
-            # pred_prob_list.append(sum(plist))
-            pred_prob_list.append(1.0)
         maxval = -999.
         for ii in range(len(pred_prob_list)):
             if pred_prob_list[ii] > maxval:
