@@ -24,7 +24,7 @@ def stream_data(path_to_json_file, limit=0, start_at=0):
             yield record
 
 
-def extract_img_feat(ds_root_dir, ds_name, split='train'):
+def extract_img_feat(ds_root_dir, ds_name, split='train', limit=0):
     features_list = []
     count = 0
     for img in Path(f'{ds_root_dir}/{ds_name}/{split}').iterdir():
@@ -37,11 +37,13 @@ def extract_img_feat(ds_root_dir, ds_name, split='train'):
         count += 1
         if count % 100 == 0:
             print(f'[{count}] {img.name}')
+        if 0 < limit <= count:
+            break
     np.save(f'{ds_root_dir}/{ds_name}/{ds_name}_{split}_feats.npy', features_list)
 
 
-def extract_question_feat(ds_root_dir, ds_name, split='train'):
-    json_data = stream_data(f'{ds_root_dir}/{ds_name}/{split}.json')
+def extract_question_feat(ds_root_dir, ds_name, split='train', limit=0):
+    json_data = stream_data(f'{ds_root_dir}/{ds_name}/{split}.json', limit=limit)
 
     features_list = []
     count = 0
@@ -55,11 +57,23 @@ def extract_question_feat(ds_root_dir, ds_name, split='train'):
         count += 1
         if count % 100 == 0:
             print(f'[{count}]')
+        if 0 < limit <= count:
+            break
     np.save(f'{ds_root_dir}/{ds_name}/{ds_name}_{split}_questions_feats.npy', features_list)
 
 
-# def extract_image_question_idx(ds_root_dir, ds_name, split='train'):
+def extract_image_question_idx(ds_root_dir, ds_name, split='train'):
+    json_data = stream_data(f'{ds_root_dir}/{ds_name}/{split}.json')
 
+    idx = {}
+    count = 0
+    for d in json_data:
+        if len(d['answers']) == 0:
+            continue
+        idx[str(count)] = f"{d['image_id']}<->{d['question_id']}"
+        count += 1
+    with open(f'{ds_root_dir}/{ds_name}/{ds_name}_{split}_idx.json', 'w') as f:
+        json.dump(idx, f)
 
 
 if __name__ == '__main__':
@@ -72,5 +86,7 @@ if __name__ == '__main__':
 
     if args.task == 'question':
         extract_question_feat(args.ds_root_dir, args.ds_name, args.split)
-    else:
+    elif args.task == 'image':
         extract_img_feat(args.ds_root_dir, args.ds_name, args.split)
+    else:
+        extract_image_question_idx(args.ds_root_dir, args.ds_name, args.split)
