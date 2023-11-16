@@ -59,8 +59,8 @@ class PICa_OKVQA:
 
         _, self.answer_dict, self.question_dict = \
             load_anno(None,
-                      f'data/datasets/${args.ds_name}/${args.ds_name}_test_annotations.json',
-                      f'data/datasets/${args.ds_name}/${args.ds_name}_test_questions.json')
+                      f'data/datasets/{args.ds_name}/{args.ds_name}_test_annotations.json',
+                      f'data/datasets/{args.ds_name}/{args.ds_name}_test_questions.json')
         self.val_keys = list(self.question_dict.keys())
 
         ## load cached image representation (Coco caption & Tags)
@@ -72,9 +72,9 @@ class PICa_OKVQA:
         #               '%s/OpenEnded_mscoco_train2014_questions.json' % args.coco_path)
 
         self.traincontext_caption_dict, self.traincontext_answer_dict, self.traincontext_question_dict = \
-            load_anno(f'data/assets/captions_${args.ds_name}.json', \
-                      f'data/datasets/${args.ds_name}/${args.ds_name}_train_annotations.json', \
-                      f'data/datasets/${args.ds_name}/${args.ds_name}_train_questions.json')
+            load_anno(f'data/assets/captions_{args.ds_name}.json', \
+                      f'data/datasets/{args.ds_name}/{args.ds_name}_train_annotations.json', \
+                      f'data/datasets/{args.ds_name}/{args.ds_name}_train_questions.json')
 
         self.train_keys = list(self.traincontext_answer_dict.keys())
         self.load_similarity()
@@ -189,9 +189,9 @@ class PICa_OKVQA:
             # self.train_idx = json.load(
             #     open('%s/okvqa_qa_line2sample_idx_train2014.json' % self.args.similarity_path, 'r'))
 
-            self.train_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_train_questions_feats.npy')
-            self.val_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_test_questions_feats.npy')
-            self.train_idx = json.load(open(f'data/datasets/${args.ds_name}/${args.ds_name}_train_idx.json', 'r'))
+            self.train_feature = np.load(f'data/datasets/{args.ds_name}/{args.ds_name}_train_questions_feats.npy')
+            self.val_feature = np.load(f'data/datasets/{args.ds_name}/{args.ds_name}_test_questions_feats.npy')
+            self.train_idx = json.load(open(f'data/datasets/{args.ds_name}/{args.ds_name}_train_idx.json', 'r'))
 
         elif self.args.similarity_metric == 'imagequestion':
             # self.train_feature = np.load('%s/coco_clip_vitb16_train2014_okvqa_question.npy' % self.args.similarity_path)
@@ -203,11 +203,11 @@ class PICa_OKVQA:
             # self.image_val_feature = np.load(
             #     '%s/coco_clip_vitb16_val2014_okvqa_convertedidx_image.npy' % self.args.similarity_path)
 
-            self.train_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_train_questions_feats.npy')
-            self.val_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_test_questions_feats.npy')
-            self.train_idx = json.load(open(f'data/datasets/${args.ds_name}/${args.ds_name}_train_idx.json', 'r'))
-            self.image_train_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_train_feats.npy')
-            self.image_val_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_test_feats.npy')
+            self.train_feature = np.load(f'data/datasets/{args.ds_name}/{args.ds_name}_train_questions_feats.npy')
+            self.val_feature = np.load(f'data/datasets/{args.ds_name}/{args.ds_name}_test_questions_feats.npy')
+            self.train_idx = json.load(open(f'data/datasets/{args.ds_name}/{args.ds_name}_train_idx.json', 'r'))
+            self.image_train_feature = np.load(f'data/datasets/{args.ds_name}/{args.ds_name}_train_feats.npy')
+            self.image_val_feature = np.load(f'data/datasets/{args.ds_name}/{args.ds_name}_test_feats.npy')
 
     def load_tags(self):
         tags_dict = {}
