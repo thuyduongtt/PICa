@@ -212,6 +212,8 @@ class PICa_OKVQA:
             self.train_idx = json.load(open(f'data/datasets/{args.ds_name}/{args.ds_name}_train_idx.json', 'r'))
             self.image_train_feature = np.load(f'data/datasets/{args.ds_name}/{args.ds_name}_train_feats.npy')
             self.image_val_feature = np.load(f'data/datasets/{args.ds_name}/{args.ds_name}_test_feats.npy')
+            print('image_train_feature:', self.image_train_feature.shape)
+            print('image_val_feature:', self.image_val_feature.shape)
 
     def load_tags(self):
         tags_dict = {}
