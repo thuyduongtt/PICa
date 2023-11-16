@@ -33,6 +33,7 @@ def extract_img_feat(ds_root_dir, ds_name, split='train', limit=0):
         image = preprocess(Image.open(f'{ds_root_dir}/{ds_name}/{split}/{img.name}')).unsqueeze(0).to(device)
         with torch.no_grad():
             im_feat = model.encode_image(image)
+            print(im_feat.shape)
             features_list.append(im_feat.cpu())
         count += 1
         if count % 100 == 0:
@@ -57,8 +58,6 @@ def extract_question_feat(ds_root_dir, ds_name, split='train', limit=0):
         count += 1
         if count % 100 == 0:
             print(f'[{count}]')
-        if 0 < limit <= count:
-            break
     np.save(f'{ds_root_dir}/{ds_name}/{ds_name}_{split}_questions_feats.npy', features_list)
 
 
