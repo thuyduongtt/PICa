@@ -36,33 +36,46 @@ def load_anno(coco_caption_file, answer_anno_file, question_anno_file):
                 caption_dict[sample['image_id']].append(sample['caption'])
     answer_dict = {}
     for sample in answer_anno['annotations']:
-        if str(sample['image_id']) + '<->' + str(sample['question_id']) not in answer_dict:
-            answer_dict[str(sample['image_id']) + '<->' + str(sample['question_id'])] = [x['answer'] for x in
-                                                                                         sample['answers']]
+        k = str(sample['image_id']) + '<->' + str(sample['question_id'])
+        if k not in answer_dict:
+            answer_dict[k] = [x['answer'] for x in sample['answers']]
 
     question_dict = {}
     for sample in question_anno['questions']:
-        if str(sample['image_id']) + '<->' + str(sample['question_id']) not in question_dict:
-            question_dict[str(sample['image_id']) + '<->' + str(sample['question_id'])] = sample['question']
+        k = str(sample['image_id']) + '<->' + str(sample['question_id'])
+        if k not in question_dict:
+            question_dict[k] = sample['question']
     return caption_dict, answer_dict, question_dict
 
 
 class PICa_OKVQA:
     def __init__(self, args):
         self.args = args
+
         ## loading input questions (and answer for reference accuracy computing)
+        # _, self.answer_dict, self.question_dict = \
+        # load_anno(None, '%s/mscoco_val2014_annotations.json' % args.coco_path, \
+        #           '%s/OpenEnded_mscoco_val2014_questions.json' % args.coco_path)
+
         _, self.answer_dict, self.question_dict = \
-            load_anno(None, '%s/mscoco_val2014_annotations.json' % args.coco_path, \
-                      '%s/OpenEnded_mscoco_val2014_questions.json' % args.coco_path)
+            load_anno(None,
+                      f'data/datasets/${args.ds_name}/${args.ds_name}_test_annotations.json',
+                      f'data/datasets/${args.ds_name}/${args.ds_name}_test_questions.json')
         self.val_keys = list(self.question_dict.keys())
 
         ## load cached image representation (Coco caption & Tags)
         self.inputtext_dict = self.load_cachetext()
 
+        # self.traincontext_caption_dict, self.traincontext_answer_dict, self.traincontext_question_dict = \
+        #     load_anno('%s/captions_train2014.json' % args.coco_path, \
+        #               '%s/mscoco_train2014_annotations.json' % args.coco_path, \
+        #               '%s/OpenEnded_mscoco_train2014_questions.json' % args.coco_path)
+
         self.traincontext_caption_dict, self.traincontext_answer_dict, self.traincontext_question_dict = \
-            load_anno('%s/captions_train2014.json' % args.coco_path, \
-                      '%s/mscoco_train2014_annotations.json' % args.coco_path, \
-                      '%s/OpenEnded_mscoco_train2014_questions.json' % args.coco_path)
+            load_anno(f'data/assets/captions_${args.ds_name}.json', \
+                      f'data/datasets/${args.ds_name}/${args.ds_name}_train_annotations.json', \
+                      f'data/datasets/${args.ds_name}/${args.ds_name}_train_questions.json')
+
         self.train_keys = list(self.traincontext_answer_dict.keys())
         self.load_similarity()
 
@@ -119,7 +132,7 @@ class PICa_OKVQA:
                     engine='gpt35',
                     prompt=prompt,
                     max_tokens=5,
-                    logprobs=1,
+                    # logprobs=1,  # not supported in GPT 3.5
                     temperature=0.,
                     stream=False,
                     stop=["\n", "<|endoftext|>"]
@@ -129,13 +142,15 @@ class PICa_OKVQA:
                 print(e)
                 exit(0)
 
-            plist = []
-            for ii in range(len(response['choices'][0]['logprobs']['tokens'])):
-                if response['choices'][0]['logprobs']['tokens'][ii] == '\n':
-                    break
-                plist.append(response['choices'][0]['logprobs']['token_logprobs'][ii])
-            pred_answer_list.append(process_answer(response['choices'][0]["text"]))
-            pred_prob_list.append(sum(plist))
+            pred_answer_list.append(process_answer(response['choices'][0]["text"].strip()))
+
+            # plist = []
+            # for ii in range(len(response['choices'][0]['logprobs']['tokens'])):
+            #     if response['choices'][0]['logprobs']['tokens'][ii] == '\n':
+            #         break
+            #     plist.append(response['choices'][0]['logprobs']['token_logprobs'][ii])
+            # pred_prob_list.append(sum(plist))
+            pred_prob_list.append(1.0)
         maxval = -999.
         for ii in range(len(pred_prob_list)):
             if pred_prob_list[ii] > maxval:
@@ -173,15 +188,23 @@ class PICa_OKVQA:
             self.val_feature = np.load('%s/coco_clip_vitb16_val2014_okvqa_question.npy' % self.args.similarity_path)
             self.train_idx = json.load(
                 open('%s/okvqa_qa_line2sample_idx_train2014.json' % self.args.similarity_path, 'r'))
+
         elif self.args.similarity_metric == 'imagequestion':
-            self.train_feature = np.load('%s/coco_clip_vitb16_train2014_okvqa_question.npy' % self.args.similarity_path)
-            self.val_feature = np.load('%s/coco_clip_vitb16_val2014_okvqa_question.npy' % self.args.similarity_path)
+            # self.train_feature = np.load('%s/coco_clip_vitb16_train2014_okvqa_question.npy' % self.args.similarity_path)
+            # self.val_feature = np.load('%s/coco_clip_vitb16_val2014_okvqa_question.npy' % self.args.similarity_path)
+            # self.train_idx = json.load(
+            #     open('%s/okvqa_qa_line2sample_idx_train2014.json' % self.args.similarity_path, 'r'))
+            # self.image_train_feature = np.load(
+            #     '%s/coco_clip_vitb16_train2014_okvqa_convertedidx_image.npy' % self.args.similarity_path)
+            # self.image_val_feature = np.load(
+            #     '%s/coco_clip_vitb16_val2014_okvqa_convertedidx_image.npy' % self.args.similarity_path)
+
+            self.train_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_train_questions_feats.npy')
+            self.val_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_test_questions_feats.npy')
             self.train_idx = json.load(
                 open('%s/okvqa_qa_line2sample_idx_train2014.json' % self.args.similarity_path, 'r'))
-            self.image_train_feature = np.load(
-                '%s/coco_clip_vitb16_train2014_okvqa_convertedidx_image.npy' % self.args.similarity_path)
-            self.image_val_feature = np.load(
-                '%s/coco_clip_vitb16_val2014_okvqa_convertedidx_image.npy' % self.args.similarity_path)
+            self.image_train_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_train_feats.npy')
+            self.image_val_feature = np.load(f'data/datasets/${args.ds_name}/${args.ds_name}_test_feats.npy')
 
     def load_tags(self):
         tags_dict = {}
@@ -206,38 +229,40 @@ class PICa_OKVQA:
         return tags_dict
 
     def load_cachetext(self):
-        read_tsv = csv.reader(open(self.args.valcaption_file, 'r'), delimiter="\t")
-        caption_dict = {}
-        if 'tag' in self.args.caption_type:
-            tags_dict = self.load_tags()
-        if self.args.caption_type == 'vinvl_tag':
-            for row in read_tsv:
-                if int(row[0]) not in caption_dict:
-                    caption_dict[int(row[0])] = [
-                        row[1].split('caption": "')[1].split('", "conf"')[0] + '. ' + tags_dict[int(row[0])]]
-                else:
-                    caption_dict[int(row[0])].append(
-                        row[1].split('caption": "')[1].split('", "conf"')[0] + '. ' + tags_dict[int(row[0])])
-        else:
-            for row in read_tsv:
-                if int(row[0]) not in caption_dict:
-                    caption_dict[int(row[0])] = [row[1].split('caption": "')[1].split('", "conf"')[0]]
-                else:
-                    caption_dict[int(row[0])].append(row[1].split('caption": "')[1].split('", "conf"')[0])
-        return caption_dict
+        return json.load(self.args.valcaption_file)
+        # read_tsv = csv.reader(open(self.args.valcaption_file, 'r'), delimiter="\t")
+        # caption_dict = {}
+        # if 'tag' in self.args.caption_type:
+        #     tags_dict = self.load_tags()
+        # if self.args.caption_type == 'vinvl_tag':
+        #     for row in read_tsv:
+        #         if int(row[0]) not in caption_dict:
+        #             caption_dict[int(row[0])] = [
+        #                 row[1].split('caption": "')[1].split('", "conf"')[0] + '. ' + tags_dict[int(row[0])]]
+        #         else:
+        #             caption_dict[int(row[0])].append(
+        #                 row[1].split('caption": "')[1].split('", "conf"')[0] + '. ' + tags_dict[int(row[0])])
+        # else:
+        #     for row in read_tsv:
+        #         if int(row[0]) not in caption_dict:
+        #             caption_dict[int(row[0])] = [row[1].split('caption": "')[1].split('", "conf"')[0]]
+        #         else:
+        #             caption_dict[int(row[0])].append(row[1].split('caption": "')[1].split('", "conf"')[0])
+        # return caption_dict
 
 
 def main():
     parser = argparse.ArgumentParser()
     # parser.add_argument('--apikey', type=str, required=True, help='api key; https://openai.com/api/')
     # parser.add_argument('--engine', type=str, default='davinci', help='api engine; https://openai.com/api/')
+    parser.add_argument('--ds_name', type=str, require=True)
     parser.add_argument('--caption_type', type=str, default='vinvl_tag', help='vinvl_tag, vinvl')
     parser.add_argument('--n_shot', type=int, default=16, help="number of shots")
     parser.add_argument('--n_ensemble', type=int, default=1, help="number of ensemble")
     parser.add_argument('--similarity_metric', type=str, default='imagequestion', help="random/question/imagequestion")
     parser.add_argument('--valcaption_file', type=str, default='input_text/vinvl_caption/VinVL_base_val2014.tsv')
     parser.add_argument('--tag_path', type=str, default='input_text/coco_caption_pred_tags')
-    parser.add_argument('--coco_path', type=str, default='coco_annotations')
+    # parser.add_argument('--coco_path', type=str, default='coco_annotations')
     parser.add_argument('--similarity_path', type=str, default='coco_clip_new')
     parser.add_argument('--output_path', type=str, default='output')
     args = parser.parse_args()
@@ -280,3 +305,16 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# --ds_name unbalanced
+# --caption_type vinvl
+# --valcaption_file data/assets/captions_unbalanced.json
+
+# --n_shot
+# --n_ensemble
+# --similarity_metric
+# --valcaption_file
+# --tag_path
+# --coco_path
+# --similarity_path
+# --output_path
