@@ -33,8 +33,6 @@ def extract_img_feat(ds_root_dir, ds_name, split='train', limit=0):
         image = preprocess(Image.open(f'{ds_root_dir}/{ds_name}/{split}/{img.name}')).unsqueeze(0).to(device)
         with torch.no_grad():
             im_feat = model.encode_image(image).cpu().numpy()[0]
-            # im_feat = im_feat.transpose(1, 2, 0)
-            # print(im_feat.shape)
             features_list.append(im_feat)
         count += 1
         if count % 100 == 0:
@@ -43,7 +41,7 @@ def extract_img_feat(ds_root_dir, ds_name, split='train', limit=0):
             break
 
     features_list = np.array(features_list)
-    print('feature_list:', features_list.shape)
+    print('image feature_list:', features_list.shape)
     np.save(f'{ds_root_dir}/{ds_name}/{ds_name}_{split}_feats.npy', features_list)
 
 
@@ -57,15 +55,14 @@ def extract_question_feat(ds_root_dir, ds_name, split='train', limit=0):
             continue
         txt = clip.tokenize(d['question']).to(device)
         with torch.no_grad():
-            txt_feat = model.encode_text(txt)
-            print(txt_feat.shape)
-            features_list.append(txt_feat.cpu())
+            txt_feat = model.encode_text(txt).cpu().numpy()[0]
+            features_list.append(txt_feat)
         count += 1
         if count % 100 == 0:
             print(f'[{count}]')
 
     features_list = np.array(features_list)
-    print('feature_list:', features_list.shape)
+    print('question feature_list:', features_list.shape)
     np.save(f'{ds_root_dir}/{ds_name}/{ds_name}_{split}_questions_feats.npy', features_list)
 
 
